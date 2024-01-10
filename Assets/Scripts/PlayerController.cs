@@ -40,6 +40,14 @@ public class PlayerController : MonoBehaviour
         Vector2 movement = ctx.ReadValue<Vector2>();
         if (Mathf.Abs(movement.x) >= Mathf.Abs(movement.y))
         {
+            if (movement.x < 0)
+            {
+                playerEntity.GetComponent<SpriteRenderer>().flipX = true;
+            }
+            else
+            {
+                playerEntity.GetComponent<SpriteRenderer>().flipX = false;
+            }
             playerEntity.Move((int)(movement.x * 1.5f), 0);
         }
         else

@@ -146,7 +146,7 @@
                     "name": "2D Vector",
                     "id": "f17c0a38-b3a2-44ec-97fc-ade7445d05e8",
                     "path": "2DVector",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "",
                     "action": "Move",

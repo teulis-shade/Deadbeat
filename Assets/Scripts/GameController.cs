@@ -26,6 +26,7 @@ public class GameController : MonoBehaviour
         beatCoroutine = StartCoroutine(BeatCoroutine(startBpm));
         tiles = new Tile[WIDTH,HEIGHT];
         //initializePositions
+        GameObject tileParent = new GameObject("TileParent");
         for (int x = 0; x < WIDTH; ++x)
         {
             for (int y = 0; y < HEIGHT; ++y)
@@ -33,6 +34,7 @@ public class GameController : MonoBehaviour
                 GameObject newTile = new GameObject("Tile" + x + "," + y);
                 tiles[x, y] = newTile.AddComponent<Tile>();
                 newTile.transform.position = new Vector3(-21f + ((2f * x) / (WIDTH * 2f)) * 42f, -12f + ((2f * y) / (HEIGHT * 2f)) * 24f);
+                newTile.transform.parent = tileParent.transform;
             }
         }
         foreach (Entity entity in Resources.FindObjectsOfTypeAll(typeof(Entity)))
@@ -53,6 +55,7 @@ public class GameController : MonoBehaviour
     public IEnumerator BeatCoroutine(float bpm)
     {
         wait = 60f / bpm;
+        FindObjectOfType<MovingMetronome>().StartMetronome(wait);
 
         while (true)
         {
