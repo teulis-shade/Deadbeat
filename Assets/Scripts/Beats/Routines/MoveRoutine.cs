@@ -17,7 +17,7 @@ public class MoveRoutine : Routine
 
     [SerializeField] List<move> moves;
     // Start is called before the first frame update
-    void Awake()
+    new void Awake()
     {
         int verticalMove = 0;
         int horizontalMove = 0;
@@ -45,25 +45,39 @@ public class MoveRoutine : Routine
             Debug.LogError("HEY, your movement for " + gameObject.name + " does not return to the starting point. Fix it, or the character won't move");
             moves.Clear();
         }
+        base.Awake();
     }
 
     public override void PerformRoutine()
     {
-        switch (moves[currentPosition++])
+        switch (moves[currentPosition])
         {
             case move.UP:
-                GetComponent<Entity>().Move(0, 1);
+                if (GetComponent<Entity>().Move(0, 1))
+                {
+                    currentPosition++;
+                }
                 break;
             case move.RIGHT:
-                GetComponent<Entity>().Move(1, 0);
+                if (GetComponent<Entity>().Move(1, 0))
+                {
+                    currentPosition++;
+                }
                 break;
             case move.LEFT:
-                GetComponent<Entity>().Move(-1, 0);
+                if (GetComponent<Entity>().Move(-1, 0))
+                {
+                    currentPosition++;
+                }
                 break;
             case move.DOWN:
-                GetComponent<Entity>().Move(0, -1);
+                if (GetComponent<Entity>().Move(0, -1))
+                {
+                    currentPosition++;
+                }
                 break;
             default:
+                currentPosition++;
                 break;
         }
         if (currentPosition >= moves.Count)

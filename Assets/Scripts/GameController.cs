@@ -25,10 +25,6 @@ public class GameController : MonoBehaviour
     {
         beatCoroutine = StartCoroutine(BeatCoroutine(startBpm));
         tiles = new Tile[WIDTH,HEIGHT];
-        foreach (var tile in tiles)
-        {
-
-        }
         //initializePositions
         for (int x = 0; x < WIDTH; ++x)
         {

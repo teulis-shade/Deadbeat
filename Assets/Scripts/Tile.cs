@@ -23,8 +23,23 @@ public class Tile : MonoBehaviour
         
     }
 
-    private void EntityEnters()
+    public void SetEntity(Entity entity)
     {
+        if (occupyingEntity != null)
+        {
+            Debug.LogError("HEY, " + occupyingEntity.gameObject.name + " is already at the position that " + entity.gameObject.name + " is in.");
+            return;
+        }
+        occupyingEntity = entity;
+    }
 
+    public void EntityLeaves()
+    {
+        occupyingEntity = null;
+    }
+
+    public bool CheckEntity()
+    {
+        return occupyingEntity != null;
     }
 }

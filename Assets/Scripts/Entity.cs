@@ -9,28 +9,38 @@ public class Entity : MonoBehaviour
     Item heldItem;
     private GameController gameController;
 
-    private Vector3 offset;
+    [SerializeField] private Vector3 offset;
 
     void Start()
     {
         gameController = FindObjectOfType<GameController>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public bool Move(int x, int y)
     {
-        
-    }
-
-    public void Move(int x, int y)
-    {
-        xPosition += x;
-        yPosition += y;
-        transform.position = gameController.GetTile(xPosition, yPosition).GetPosition() + offset;
+        if (gameController.GetTile(xPosition + x, yPosition + y) == null)
+        {
+            return false;
+        }
+        if (!gameController.GetTile(xPosition + x, yPosition + y).CheckEntity())
+        {
+            gameController.GetTile(xPosition, yPosition).EntityLeaves();
+            xPosition += x;
+            yPosition += y;
+            transform.position = gameController.GetTile(xPosition, yPosition).GetPosition() + offset;
+            gameController.GetTile(xPosition, yPosition).SetEntity(this);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public void SetPositionInit(Tile tile)
     {
+        gameController = FindObjectOfType<GameController>();
         transform.position = tile.GetPosition() + offset;
+        gameController.GetTile(xPosition, yPosition).SetEntity(this);
     } 
 }
