@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     GameController gameController;
     Entity playerEntity;
+    [SerializeField] int alertRadius;
     private void Awake()
     {
         gameController = FindObjectOfType<GameController>();
@@ -29,14 +30,6 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
-        if (gameController.CheckInput())
-        {
-            Debug.Log("Hit Beat");
-        }
-        else
-        {
-            Debug.Log("AAAAAAAAAAHHHHHHHH");
-        }
         Vector2 movement = ctx.ReadValue<Vector2>();
         if (Mathf.Abs(movement.x) >= Mathf.Abs(movement.y))
         {
@@ -53,6 +46,25 @@ public class PlayerController : MonoBehaviour
         else
         {
             playerEntity.Move(0, (int)(movement.y * 1.5f));
+        }
+        if (gameController.CheckInput())
+        {
+            Debug.Log("Hit Beat");
+        }
+        else
+        {
+            foreach (Tile tile in gameController.CheckCircle(playerEntity.xPosition, playerEntity.yPosition, alertRadius))
+            {
+                if (tile.CheckEntity())
+                {
+                    if (tile.GetEntity() != playerEntity)
+                    {
+                        tile.GetEntity().IncreaseSuspicion(1);
+                        tile.GetEntity().GetComponent<SpriteRenderer>().color = Color.red;
+                    }
+                }
+            }
+            Debug.Log("AAAAAAAAAAHHHHHHHH");
         }
     }
 }

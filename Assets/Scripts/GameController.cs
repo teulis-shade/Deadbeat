@@ -73,11 +73,40 @@ public class GameController : MonoBehaviour
             beatAction = true;
             return true;
         }
+
         return false;
+    }
+
+    public List<Tile> CheckCircle(int startX, int startY, int max)
+    {
+        List<Tile> returnList = new List<Tile>();
+        CheckQuarterRecursive(startX, startY, 1, 1, 0, max, returnList);
+        CheckQuarterRecursive(startX, startY, -1, 1, 0, max, returnList);
+        CheckQuarterRecursive(startX, startY, 1, -1, 0, max, returnList);
+        CheckQuarterRecursive(startX, startY, -1, -1, 0, max, returnList);
+        return returnList;
+    }
+    
+    void CheckQuarterRecursive(int startX, int startY, int x, int y, int t, int m, List<Tile> r)
+    {
+        if (t > m || startX >= WIDTH || startY >= HEIGHT || startX < 0 || startY < 0)
+        {
+            return;
+        }
+        if (!r.Contains(tiles[startX,startY]))
+        {
+            r.Add(tiles[startX, startY]);
+        }
+        CheckQuarterRecursive(startX + x, startY, x, y, t + 1, m, r);
+        CheckQuarterRecursive(startX, startY + y, x, y, t + 1, m, r);
     }
 
     public Tile GetTile(int x, int y)
     {
+        if (x >= WIDTH || y >= HEIGHT || x < 0 || y < 0)
+        {
+            return null;
+        }
         return tiles[x,y];
     }
 }

@@ -42,4 +42,9 @@ public class Tile : MonoBehaviour
     {
         return occupyingEntity != null;
     }
+
+    public Entity GetEntity()
+    {
+        return occupyingEntity;
+    }
 }

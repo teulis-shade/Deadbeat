@@ -6,6 +6,7 @@ public class Entity : MonoBehaviour
 {
     public int xPosition;
     public int yPosition;
+    [SerializeField] float alertness;
     Item heldItem;
     private GameController gameController;
 
@@ -43,4 +44,9 @@ public class Entity : MonoBehaviour
         transform.position = tile.GetPosition() + offset;
         gameController.GetTile(xPosition, yPosition).SetEntity(this);
     } 
+
+    public void IncreaseSuspicion(int severity)
+    {
+        FindObjectOfType<SuspicionMeter>().IncreaseSuspicion(severity * alertness);
+    }
 }
