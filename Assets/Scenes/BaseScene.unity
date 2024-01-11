@@ -248,7 +248,7 @@ MonoBehaviour:
   xPosition: 35
   yPosition: 5
   alertnessModifier: 0.5
-  reusable: 0
+  reusable: 1
   offset: {x: 0, y: 0, z: 0}
 --- !u!212 &154835346
 SpriteRenderer:
@@ -1856,7 +1856,7 @@ MonoBehaviour:
   xPosition: 30
   yPosition: 5
   alertnessModifier: 0.5
-  reusable: 0
+  reusable: 1
   offset: {x: 0, y: 0, z: 0}
 --- !u!212 &1422483567
 SpriteRenderer:
