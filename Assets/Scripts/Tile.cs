@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class Tile : MonoBehaviour
 {
@@ -46,5 +47,31 @@ public class Tile : MonoBehaviour
     public Entity GetEntity()
     {
         return occupyingEntity;
+    }
+
+    public void TakeItem()
+    {
+        occupyingItem.gameObject.SetActive(false);
+        occupyingItem = null;
+    }
+
+    public void SetItem(Item item)
+    {
+        if (occupyingItem != null)
+        {
+            Debug.LogError("HEY, " + occupyingItem.gameObject.name + " is already at the position that " + item.gameObject.name + " is in.");
+            return;
+        }
+        occupyingItem = item;
+    }
+
+    public bool CheckItem()
+    {
+        return occupyingItem != null;
+    }
+
+    public Item GetItem()
+    {
+        return occupyingItem;
     }
 }

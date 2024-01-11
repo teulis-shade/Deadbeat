@@ -8,6 +8,9 @@ public class PlayerController : MonoBehaviour
     GameController gameController;
     Entity playerEntity;
     [SerializeField] int alertRadius;
+
+    [SerializeField] Item leftItem;
+    [SerializeField] Item rightItem;
     private void Awake()
     {
         gameController = FindObjectOfType<GameController>();
@@ -65,6 +68,66 @@ public class PlayerController : MonoBehaviour
                 }
             }
             Debug.Log("AAAAAAAAAAHHHHHHHH");
+        }
+    }
+
+    public void OnItemLeft(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.started)
+        {
+            return;
+        }
+        if (!gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition).CheckItem())
+        {
+            if (leftItem == null)
+            {
+                return;
+            }
+            if (!leftItem.Use())
+            {
+                leftItem = null;
+            }
+        }
+        else
+        {
+            Item currentHeld = leftItem;
+            leftItem = gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition).GetItem();
+            gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition).TakeItem();
+            if (currentHeld != null)
+            {
+                currentHeld.gameObject.SetActive(true);
+                currentHeld.SetPositionInit(gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition));
+            }
+        }
+    }
+
+    public void OnItemRight(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.started)
+        {
+            return;
+        }
+        if (!gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition).CheckItem())
+        {
+            if (rightItem == null)
+            {
+                return;
+            }
+            if (!rightItem.Use())
+            {
+                rightItem = null;
+            }
+        }
+        else
+        {
+            Item currentHeld = rightItem;
+            rightItem = gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition).GetItem();
+            gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition).TakeItem();
+            if (currentHeld != null)
+            {
+                currentHeld.gameObject.SetActive(true);
+                currentHeld.SetPositionInit(gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition));
+            }
         }
     }
 }

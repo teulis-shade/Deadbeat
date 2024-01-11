@@ -41,6 +41,9 @@ public class GameController : MonoBehaviour
         {
             entity.SetPositionInit(tiles[entity.xPosition, entity.yPosition]);
         }
+        foreach (Item item in Resources.FindObjectsOfTypeAll(typeof(Item))) {
+            item.SetPositionInit(tiles[item.xPosition, item.yPosition]);
+        }
     }
 
     public void UpdateBPM(float bpm)
