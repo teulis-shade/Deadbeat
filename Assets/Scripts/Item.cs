@@ -8,6 +8,7 @@ public class Item : MonoBehaviour
     public int yPosition;
     [SerializeField] float alertnessModifier;
     private GameController gameController;
+    [SerializeField] bool reusable;
 
     [SerializeField] private Vector3 offset;
 
@@ -18,9 +19,14 @@ public class Item : MonoBehaviour
 
     public void SetPositionInit(Tile tile)
     {
-        gameController = FindObjectOfType<GameController>();
         transform.position = tile.GetPosition() + offset;
-        gameController.GetTile(xPosition, yPosition).SetItem(this);
+        tile.SetItem(this);
+    }
+
+    public void SetPosition(int xPos, int yPos, Tile tile)
+    {
+        transform.position = tile.GetPosition() + offset;
+        tile.SetItem(this);
     }
 
     /// <summary>
@@ -29,6 +35,6 @@ public class Item : MonoBehaviour
     /// <returns>Returns false if the item is used up, and true if the item is reusable</returns>
     public virtual bool Use()
     {
-        return false;
+        return reusable;
     }
 }
