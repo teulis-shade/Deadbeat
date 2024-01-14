@@ -69,7 +69,7 @@ public class Entity : MonoBehaviour
         gameController.GetTile(xPosition, yPosition).SetEntity(this);
     }
 
-    public void IncreaseSuspicion(int severity)
+    public void IncreaseSuspicion(float severity)
     {
         if (GetComponent<PlayerController>() != null)
         {
@@ -82,12 +82,12 @@ public class Entity : MonoBehaviour
 
     public void Die()
     {
-        Debug.Log("OWWWWWWWWW");
         if (GetComponent<MoveRoutine>() != null)
         {
             Destroy(GetComponent<MoveRoutine>());
         }
-        foreach (Tile tile in gameController.CheckCircle(xPosition, yPosition, 4))
+        gameController.GetTile(xPosition, yPosition).EntityLeaves();
+        foreach (Tile tile in gameController.CheckCircle(xPosition, yPosition, 8))
         {
             if (tile.GetEntity() != null)
             {
@@ -95,12 +95,11 @@ public class Entity : MonoBehaviour
             }
         }
         GetComponent<SpriteRenderer>().color = Color.green;
-        gameController.GetTile(xPosition, yPosition).EntityLeaves();
         Item item = gameObject.AddComponent<Item>();
         gameController.GetTile(xPosition, yPosition).SetItem(item);
         item.xPosition = xPosition;
         item.yPosition = yPosition;
-        item.alertnessModifier = .5f;
+        item.alertnessModifier = 1.5f;
         item.reusable = true;
         Destroy(this);
     }

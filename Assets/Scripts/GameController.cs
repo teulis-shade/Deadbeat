@@ -38,7 +38,7 @@ public class GameController : MonoBehaviour
                 GameObject newTile = new GameObject("Tile" + x + "," + y);
                 tiles[x, y] = newTile.AddComponent<Tile>();
                 newTile.transform.parent = tileParent.transform;
-                newTile.transform.localPosition = new Vector3(-22f + ((2f * x) / (WIDTH * 2f)) * 44f, -12.5f + ((2f * y) / (HEIGHT * 2f)) * 25f);
+                newTile.transform.localPosition = new Vector3(-21.7f + ((2f * x) / (WIDTH * 2f)) * 44f, -12.2f + ((2f * y) / (HEIGHT * 2f)) * 25f);
                 newTile.transform.localScale = new Vector3(xScale, yScale);
                 newTile.AddComponent<SpriteRenderer>().color = ((x + y) % 2 == 0) ? new Color(.8f, .7f, .7f) : new Color(.6f, .3f, 0f);
                 newTile.GetComponent<SpriteRenderer>().sprite = tileSprite;

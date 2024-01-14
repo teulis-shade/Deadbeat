@@ -248,7 +248,7 @@ MonoBehaviour:
   xPosition: 35
   yPosition: 5
   alertnessModifier: 0.5
-  reusable: 1
+  reusable: 0
   startsOnPlayer: 0
   offset: {x: 0, y: 0, z: -0.1}
 --- !u!212 &154835346
@@ -2048,7 +2048,7 @@ MonoBehaviour:
   xPosition: 30
   yPosition: 5
   alertnessModifier: 0.5
-  reusable: 1
+  reusable: 0
   startsOnPlayer: 0
   offset: {x: 0, y: 0, z: -0.1}
 --- !u!212 &1422483567
@@ -2601,7 +2601,7 @@ GameObject:
   - component: {fileID: 1959244922}
   - component: {fileID: 1959244924}
   m_Layer: 0
-  m_Name: Item (2)
+  m_Name: Baton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2688,7 +2688,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xPosition: 30
   yPosition: 5
-  alertnessModifier: 0.5
+  alertnessModifier: 0
   reusable: 1
   startsOnPlayer: 1
   offset: {x: 0, y: 0, z: -0.1}

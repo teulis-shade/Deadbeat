@@ -90,7 +90,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (tile.GetEntity() != playerEntity)
                     {
-                        tile.GetEntity().IncreaseSuspicion(1);
+                        tile.GetEntity().IncreaseSuspicion(1 + (leftItem == null ?  0 : leftItem.alertnessModifier) + (rightItem == null ? 0 : rightItem.alertnessModifier));
                     }
                 }
             }

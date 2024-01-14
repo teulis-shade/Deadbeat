@@ -6,9 +6,9 @@ public class Item : MonoBehaviour
 {
     public int xPosition;
     public int yPosition;
-    [SerializeField] public float alertnessModifier;
+    public float alertnessModifier;
     private GameController gameController;
-    [SerializeField] public bool reusable { get; set; }
+    public bool reusable;
     [SerializeField] bool startsOnPlayer;
 
     [SerializeField] private Vector3 offset;
