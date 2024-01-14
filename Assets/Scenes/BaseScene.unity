@@ -1993,7 +1993,7 @@ MonoBehaviour:
     m_ActionId: 7159dab6-93df-4f84-8431-6853fed31274
     m_ActionName: Player/ItemDropRight[/XInputControllerWindows/rightShoulder,/Keyboard/w]
   m_NeverAutoSwitchControlSchemes: 1
-  m_DefaultControlScheme: Keyboard&Mouse
+  m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}

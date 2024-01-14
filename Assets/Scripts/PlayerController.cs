@@ -193,7 +193,6 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
-        Debug.Log("LEFT");
         if (!gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition).CheckItem())
         {
             if (leftItem == null)

@@ -23,6 +23,7 @@ public class Item : MonoBehaviour
         if (startsOnPlayer)
         {
             FindObjectOfType<PlayerController>().PickUpStart(this);
+            startsOnPlayer = false;
         }
         else
         {
