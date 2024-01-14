@@ -27,6 +27,22 @@ public class Entity : MonoBehaviour
 
     public bool Move(int x, int y)
     {
+        if (x == 1)
+        {
+            currentDirection = FacingDirection.RIGHT;
+        }
+        else if (x == -1)
+        {
+            currentDirection = FacingDirection.LEFT;
+        }
+        else if (y == 1)
+        {
+            currentDirection = FacingDirection.UP;
+        }
+        else if (y == -1) 
+        {
+            currentDirection = FacingDirection.DOWN;
+        }
         if (gameController.GetTile(xPosition + x, yPosition + y) == null)
         {
             return false;
@@ -55,6 +71,10 @@ public class Entity : MonoBehaviour
 
     public void IncreaseSuspicion(int severity)
     {
+        if (GetComponent<PlayerController>() != null)
+        {
+            return;
+        }
         FindObjectOfType<SuspicionMeter>().IncreaseSuspicion(severity * alertness);
         StopCoroutine("SuspicionCoroutine");
         StartCoroutine("SuspicionCoroutine");
@@ -62,10 +82,27 @@ public class Entity : MonoBehaviour
 
     public void Die()
     {
-        if (heldItem != null)
+        Debug.Log("OWWWWWWWWW");
+        if (GetComponent<MoveRoutine>() != null)
         {
-
+            Destroy(GetComponent<MoveRoutine>());
         }
+        foreach (Tile tile in gameController.CheckCircle(xPosition, yPosition, 4))
+        {
+            if (tile.GetEntity() != null)
+            {
+                tile.GetEntity().IncreaseSuspicion(5);
+            }
+        }
+        GetComponent<SpriteRenderer>().color = Color.green;
+        gameController.GetTile(xPosition, yPosition).EntityLeaves();
+        Item item = gameObject.AddComponent<Item>();
+        gameController.GetTile(xPosition, yPosition).SetItem(item);
+        item.xPosition = xPosition;
+        item.yPosition = yPosition;
+        item.alertnessModifier = .5f;
+        item.reusable = true;
+        Destroy(this);
     }
 
     IEnumerator SuspicionCoroutine()
@@ -74,5 +111,26 @@ public class Entity : MonoBehaviour
         yield return new WaitForSeconds(.5f);
         GetComponent<SpriteRenderer>().color = Color.white;
 
+    }
+
+    public Tile CheckFacingTile()
+    {
+        switch (currentDirection)
+        {
+            case FacingDirection.UP:
+                return gameController.GetTile(xPosition, yPosition + 1);
+
+            case FacingDirection.RIGHT:
+                return gameController.GetTile(xPosition + 1, yPosition);
+
+            case FacingDirection.LEFT:
+                return gameController.GetTile(xPosition - 1, yPosition);
+
+            case FacingDirection.DOWN:
+                return gameController.GetTile(xPosition, yPosition - 1);
+
+            default:
+                return null;
+        }
     }
 }

@@ -735,7 +735,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 455fac7a00000000
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -2599,7 +2599,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1959244923}
   - component: {fileID: 1959244922}
-  - component: {fileID: 1959244921}
+  - component: {fileID: 1959244924}
   m_Layer: 0
   m_Name: Item (2)
   m_TagString: Untagged
@@ -2607,24 +2607,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1959244921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1959244920}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 545563f82fde3ce4192427ab99280189, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  xPosition: 30
-  yPosition: 5
-  alertnessModifier: 0.5
-  reusable: 1
-  startsOnPlayer: 1
-  offset: {x: 0, y: 0, z: -0.1}
 --- !u!212 &1959244922
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2692,6 +2674,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1959244924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1959244920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1deaaa12c7d92b845b3840f7c9ebf90d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xPosition: 30
+  yPosition: 5
+  alertnessModifier: 0.5
+  reusable: 1
+  startsOnPlayer: 1
+  offset: {x: 0, y: 0, z: -0.1}
 --- !u!1 &2002350983
 GameObject:
   m_ObjectHideFlags: 0
