@@ -91,7 +91,6 @@ public class PlayerController : MonoBehaviour
                     if (tile.GetEntity() != playerEntity)
                     {
                         tile.GetEntity().IncreaseSuspicion(1);
-                        tile.GetEntity().GetComponent<SpriteRenderer>().color = Color.red;
                     }
                 }
             }

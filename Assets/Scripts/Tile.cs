@@ -15,7 +15,7 @@ public class Tile : MonoBehaviour
 
     public Vector3 GetPosition()
     {
-        return transform.position;
+        return transform.localPosition;
     }
 
     // Update is called once per frame

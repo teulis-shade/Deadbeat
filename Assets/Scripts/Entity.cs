@@ -56,6 +56,8 @@ public class Entity : MonoBehaviour
     public void IncreaseSuspicion(int severity)
     {
         FindObjectOfType<SuspicionMeter>().IncreaseSuspicion(severity * alertness);
+        StopCoroutine("SuspicionCoroutine");
+        StartCoroutine("SuspicionCoroutine");
     }
 
     public void Die()
@@ -64,5 +66,13 @@ public class Entity : MonoBehaviour
         {
 
         }
+    }
+
+    IEnumerator SuspicionCoroutine()
+    {
+        GetComponent<SpriteRenderer>().color = Color.red;
+        yield return new WaitForSeconds(.5f);
+        GetComponent<SpriteRenderer>().color = Color.white;
+
     }
 }

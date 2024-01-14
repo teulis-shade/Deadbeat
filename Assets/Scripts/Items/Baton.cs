@@ -6,6 +6,7 @@ public class Baton : Item
 {
     public override bool Use()
     {
+
         return base.Use();
     }
 }

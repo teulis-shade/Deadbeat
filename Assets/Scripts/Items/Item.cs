@@ -16,6 +16,7 @@ public class Item : MonoBehaviour
     void Start()
     {
         gameController = FindObjectOfType<GameController>();
+        GetComponent<SpriteRenderer>().sortingOrder = -1;
     }
 
     public void SetPositionInit(Tile tile)

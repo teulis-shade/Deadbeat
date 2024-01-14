@@ -250,7 +250,7 @@ MonoBehaviour:
   alertnessModifier: 0.5
   reusable: 1
   startsOnPlayer: 0
-  offset: {x: 0, y: 0, z: 0}
+  offset: {x: 0, y: 0, z: -0.1}
 --- !u!212 &154835346
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1008,7 +1008,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 850, y: 300}
-  m_SizeDelta: {x: 25, y: 40}
+  m_SizeDelta: {x: 50, y: 40}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &748089908
 MonoBehaviour:
@@ -1023,7 +1023,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.44654083, g: 0.44654083, b: 0.44654083, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1172,8 +1172,9 @@ MonoBehaviour:
   startBpm: 120
   beatAction: 0
   leniency: 0.12
-  WIDTH: 42
-  HEIGHT: 24
+  WIDTH: 40
+  HEIGHT: 23
+  tileSprite: {fileID: 21300000, guid: c27f77567f47f1648bf6c53f722534c3, type: 3}
 --- !u!4 &892128678
 Transform:
   m_ObjectHideFlags: 0
@@ -2013,7 +2014,7 @@ MonoBehaviour:
   yPosition: 5
   alertness: 0
   currentDirection: 0
-  offset: {x: 0, y: 0.5, z: 0}
+  offset: {x: 0, y: 0.4, z: 0}
 --- !u!1 &1422483565
 GameObject:
   m_ObjectHideFlags: 0
@@ -2049,7 +2050,7 @@ MonoBehaviour:
   alertnessModifier: 0.5
   reusable: 1
   startsOnPlayer: 0
-  offset: {x: 0, y: 0, z: 0}
+  offset: {x: 0, y: 0, z: -0.1}
 --- !u!212 &1422483567
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2623,7 +2624,7 @@ MonoBehaviour:
   alertnessModifier: 0.5
   reusable: 1
   startsOnPlayer: 1
-  offset: {x: 0, y: 0, z: 0}
+  offset: {x: 0, y: 0, z: -0.1}
 --- !u!212 &1959244922
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2864,8 +2865,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a0e106d4206b84408cd2b9fa3c18bfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xPosition: 40
-  yPosition: 15
+  xPosition: 30
+  yPosition: 20
   alertness: 0.5
   currentDirection: 0
   offset: {x: 0, y: 0, z: 0}
