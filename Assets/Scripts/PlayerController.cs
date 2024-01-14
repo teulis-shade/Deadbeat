@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,13 +12,40 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] Item leftItem;
     [SerializeField] Item rightItem;
+    [SerializeField] Image leftHand;
+    [SerializeField] Image rightHand;
     private void Awake()
     {
         gameController = FindObjectOfType<GameController>();
         playerEntity = GetComponent<Entity>();
     }
-    public void OnInteract()
+    private void Update()
     {
+        if (leftItem != null)
+        {
+            leftHand.enabled = true;
+            leftHand.sprite = leftItem.GetComponent<SpriteRenderer>().sprite;
+        }
+        else
+        {
+            leftHand.enabled = false;
+        }
+        if (rightItem != null)
+        {
+            rightHand.enabled = true;
+            rightHand.sprite = rightItem.GetComponent<SpriteRenderer>().sprite;
+        }
+        else
+        {
+            rightHand.enabled = false;
+        }
+    }
+    public void OnInteract(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.started)
+        {
+            return;
+        }
         if (gameController.CheckInput())
         {
             Debug.Log("YOU MADE IT");
@@ -71,7 +99,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnItemLeft(InputAction.CallbackContext ctx)
+    public void OnItemLeftDrop(InputAction.CallbackContext ctx)
     {
         if (!ctx.started)
         {
@@ -83,15 +111,43 @@ public class PlayerController : MonoBehaviour
             {
                 return;
             }
-            if (!leftItem.Use())
-            {
-                leftItem = null;
-            }
+            leftItem.gameObject.SetActive(true);
+            leftItem.SetPositionInit(gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition));
+            leftItem = null;
         }
         else
         {
             Item currentHeld = leftItem;
             leftItem = gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition).GetItem();
+            gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition).TakeItem();
+            if (currentHeld != null)
+            {
+                currentHeld.gameObject.SetActive(true);
+                currentHeld.SetPositionInit(gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition));
+            }
+        }
+    }
+
+    public void OnItemRightDrop(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.started)
+        {
+            return;
+        }
+        if (!gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition).CheckItem())
+        {
+            if (rightItem == null)
+            {
+                return;
+            }
+            rightItem.gameObject.SetActive(true);
+            rightItem.SetPositionInit(gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition));
+            rightItem = null;
+        }
+        else
+        {
+            Item currentHeld = rightItem;
+            rightItem = gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition).GetItem();
             gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition).TakeItem();
             if (currentHeld != null)
             {
@@ -128,6 +184,55 @@ public class PlayerController : MonoBehaviour
                 currentHeld.gameObject.SetActive(true);
                 currentHeld.SetPositionInit(gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition));
             }
+        }
+    }
+
+    public void OnItemLeft(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.started)
+        {
+            return;
+        }
+        Debug.Log("LEFT");
+        if (!gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition).CheckItem())
+        {
+            if (leftItem == null)
+            {
+                return;
+            }
+            if (!leftItem.Use())
+            {
+                leftItem = null;
+            }
+        }
+        else
+        {
+            Item currentHeld = leftItem;
+            leftItem = gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition).GetItem();
+            gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition).TakeItem();
+            if (currentHeld != null)
+            {
+                currentHeld.gameObject.SetActive(true);
+                currentHeld.SetPositionInit(gameController.GetTile(playerEntity.xPosition, playerEntity.yPosition));
+            }
+        }
+    }
+
+    public void PickUpStart(Item item)
+    {
+        if (rightItem == null)
+        {
+            rightItem = item;
+            item.gameObject.SetActive(false);
+        }
+        else if (leftItem == null)
+        {
+            leftItem = item;
+            item.gameObject.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("There are 3 items that begin on the players person");
         }
     }
 }

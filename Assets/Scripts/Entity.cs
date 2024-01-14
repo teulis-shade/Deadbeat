@@ -10,6 +10,14 @@ public class Entity : MonoBehaviour
     Item heldItem;
     private GameController gameController;
 
+
+    public enum FacingDirection
+    {
+        LEFT, RIGHT, UP, DOWN
+    }
+
+    public FacingDirection currentDirection; 
+
     [SerializeField] private Vector3 offset;
 
     void Start()
@@ -43,10 +51,18 @@ public class Entity : MonoBehaviour
         gameController = FindObjectOfType<GameController>();
         transform.position = tile.GetPosition() + offset;
         gameController.GetTile(xPosition, yPosition).SetEntity(this);
-    } 
+    }
 
     public void IncreaseSuspicion(int severity)
     {
         FindObjectOfType<SuspicionMeter>().IncreaseSuspicion(severity * alertness);
+    }
+
+    public void Die()
+    {
+        if (heldItem != null)
+        {
+
+        }
     }
 }

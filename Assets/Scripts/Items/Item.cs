@@ -9,6 +9,7 @@ public class Item : MonoBehaviour
     [SerializeField] float alertnessModifier;
     private GameController gameController;
     [SerializeField] bool reusable;
+    [SerializeField] bool startsOnPlayer;
 
     [SerializeField] private Vector3 offset;
 
@@ -19,14 +20,15 @@ public class Item : MonoBehaviour
 
     public void SetPositionInit(Tile tile)
     {
-        transform.position = tile.GetPosition() + offset;
-        tile.SetItem(this);
-    }
-
-    public void SetPosition(int xPos, int yPos, Tile tile)
-    {
-        transform.position = tile.GetPosition() + offset;
-        tile.SetItem(this);
+        if (startsOnPlayer)
+        {
+            FindObjectOfType<PlayerController>().PickUpStart(this);
+        }
+        else
+        {
+            transform.position = tile.GetPosition() + offset;
+            tile.SetItem(this);
+        }
     }
 
     /// <summary>
