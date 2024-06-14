@@ -49,6 +49,7 @@ public class BeatDetection : EditorWindow
 
     public static void DetectBeats(string audioFilePath, int numBands, int fftLength, double thresholdAdjustmentFactor, double minInterval)
     {
+        Debug.Log(Path.GetFileName(audioFilePath));
         double lastBeatTime = -1;
         BeatData data = new BeatData();
         // Read audio file
@@ -62,6 +63,7 @@ public class BeatDetection : EditorWindow
 
             // Allocate memory for the samples
             float[] buffer = new float[audioFile.Length];
+            Debug.Log(buffer.Length);
             int samplesRead = audioFile.Read(buffer, 0, buffer.Length);
 
             // Apply FFT to the samples
@@ -93,15 +95,15 @@ public class BeatDetection : EditorWindow
                 energyHistory.Add(sum /= bandEnergy.Length);
 
                 // Calculate dynamic threshold
-                double dynamicThreshold = CalculateDynamicThreshold(bandEnergy, thresholdAdjustmentFactor);
+                double dynamicThreshold = CalculateDynamicThreshold(bandEnergy);
 
                 //Alright, I'm doing this to prevent the compiler from saying that this loop is useless and optimizing it away, because that's a problem apparently
                 double total = 0f;
-                Debug.Log(dynamicThreshold);
                 // Detect beats based on energy and threshold
                 for (int j = 0; j < numBands; j++)
                 {
-                    if (bandEnergy[j] > dynamicThreshold)
+                    total += bandEnergy[j];
+                    if (bandEnergy[j] > dynamicThreshold * thresholdAdjustmentFactor)
                     {
                         //Find the time from the sampleRate and the amount of samples taken
                         double currentTime = (double)processedNum / (double)sampleRate / 2;
@@ -112,12 +114,10 @@ public class BeatDetection : EditorWindow
 
                             // Update the time of the last detected beat
                             lastBeatTime = currentTime;
-                            total += currentTime;
                         }
                     }
 
                 }
-                Debug.Log(total);
                 //Increment the processed sample number by the amount of processed numbers
                 processedNum += fftLength;
 
@@ -129,7 +129,6 @@ public class BeatDetection : EditorWindow
                     energyHistory.RemoveAt(0); 
                 }
             }
-            Debug.Log("");
         }
         File.WriteAllText(Application.streamingAssetsPath + "/" + Path.GetFileNameWithoutExtension(audioFilePath) + ".json", JsonUtility.ToJson(data));
     }
@@ -151,7 +150,7 @@ public class BeatDetection : EditorWindow
         return bandEnergy;
     }
 
-    private static double CalculateDynamicThreshold(double[] bandEnergy, double thresholdAdjustment)
+    private static double CalculateDynamicThreshold(double[] bandEnergy)
     {
         // Calculate average energy over the recent history
         double sum = 0;
@@ -162,7 +161,7 @@ public class BeatDetection : EditorWindow
         double averageEnergy = energyHistory.Count > 0 ? sum / energyHistory.Count : 0;
 
         // Calculate dynamic threshold (e.g., as a percentage of average energy)
-        double dynamicThreshold = averageEnergy * thresholdAdjustment;
+        double dynamicThreshold = averageEnergy;
 
         // Smooth the threshold using exponential smoothing
         double smoothedThreshold = (dynamicThreshold * SmoothingFactor) + (thresholds != null ? thresholds.Average() * (1 - SmoothingFactor) : 0);
