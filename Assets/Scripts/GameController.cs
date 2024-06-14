@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using System.IO;
+using UnityEngine.Networking;
+using System;
 
 public class GameController : MonoBehaviour
 {
@@ -22,9 +25,15 @@ public class GameController : MonoBehaviour
     [SerializeField] private Sprite tileSprite;
     private Tile[,] tiles;
 
+    [SerializeField] string musicPath;
+
+    int currentIndex = 0;
+
+    [SerializeField] AudioSource audioSource;
+
     private void Start()
     {
-        beatCoroutine = StartCoroutine(BeatCoroutine(startBpm));
+        StartCoroutine(LoadAudio(Path.GetFileName(musicPath)));
         tiles = new Tile[WIDTH,HEIGHT];
         //initializePositions
         GameObject tileParent = new GameObject("TileParent");
@@ -54,26 +63,56 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void UpdateBPM(float bpm)
+    IEnumerator LoadAudio(string path)
     {
-        if (beatCoroutine != null)
+        string fullPath = Path.Combine(Application.streamingAssetsPath, path);
+        // Load the MP3 file using UnityWebRequest
+        UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(fullPath, AudioType.MPEG);
+
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
         {
-            StopCoroutine(beatCoroutine);
+            Debug.LogError("Failed to load MP3 file: " + www.error);
         }
-        beatCoroutine = StartCoroutine(BeatCoroutine(bpm));
+        else
+        {
+            // Create AudioClip from downloaded MP3 data
+            AudioClip mp3Clip = DownloadHandlerAudioClip.GetContent(www);
+
+            // Play the audio clip
+            PlayAudio(mp3Clip, path);
+        }
     }
 
-    public IEnumerator BeatCoroutine(float bpm)
+    public void PlayAudio(AudioClip mp3Clip, string fileName)
     {
-        wait = 60f / bpm;
-        FindObjectOfType<MovingMetronome>().StartMetronome(wait);
+        audioSource.clip = mp3Clip;
+        audioSource.Play();
+        BeatData data = JsonUtility.FromJson<BeatData>(File.ReadAllText(Application.streamingAssetsPath + "/" + Path.GetFileNameWithoutExtension(fileName) + ".json"));
+        StartCoroutine(BeatCoroutine(data));
+    }
 
+    public IEnumerator BeatCoroutine(BeatData data)
+    {
+        List<double> times = data.beats;
         while (true)
         {
-            yield return new WaitForSeconds(wait);
+            if (currentIndex == 0)
+            {
+                yield return new WaitForSeconds((float)times[currentIndex]);
+            }
+            else
+            {
+                yield return new WaitForSeconds((float)times[currentIndex] - (float)times[currentIndex - 1]);
+            }
             lastTick = Time.time;
             Beat.Invoke();
             beatAction = false;
+            if (times.Count == ++currentIndex)
+            {
+                break;
+            }
         }
     }
 

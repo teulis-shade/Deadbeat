@@ -14,7 +14,7 @@ public class Metronome : Beat
 
     public override void OnBeat()
     {
-        StartCoroutine(Beep());
+        //StartCoroutine(Beep());
     }
 
     IEnumerator Beep()
