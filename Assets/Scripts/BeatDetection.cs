@@ -47,8 +47,9 @@ public class BeatDetection : EditorWindow
     private static double[] thresholds;
     private static List<double> energyHistory = new List<double>();
 
-    public static void DetectBeats(string audioFilePath, int numBands, int fftLength, double thresholdAdjustmentFactor)
+    public static void DetectBeats(string audioFilePath, int numBands, int fftLength, double thresholdAdjustmentFactor, double minInterval)
     {
+        double lastBeatTime = -1;
         BeatData data = new BeatData();
         // Read audio file
         using (var audioFile = new AudioFileReader(Application.streamingAssetsPath + "/" + Path.GetFileName(audioFilePath)))
@@ -94,6 +95,9 @@ public class BeatDetection : EditorWindow
                 // Calculate dynamic threshold
                 double dynamicThreshold = CalculateDynamicThreshold(bandEnergy, thresholdAdjustmentFactor);
 
+                //Alright, I'm doing this to prevent the compiler from saying that this loop is useless and optimizing it away, because that's a problem apparently
+                double total = 0f;
+                Debug.Log(dynamicThreshold);
                 // Detect beats based on energy and threshold
                 for (int j = 0; j < numBands; j++)
                 {
@@ -101,10 +105,19 @@ public class BeatDetection : EditorWindow
                     {
                         //Find the time from the sampleRate and the amount of samples taken
                         double currentTime = (double)processedNum / (double)sampleRate / 2;
+                        if (currentTime - lastBeatTime >= minInterval)
+                        {
+                            // Add the beat to the data
+                            data.AddBeat(currentTime);
 
-                        data.AddBeat(currentTime);
+                            // Update the time of the last detected beat
+                            lastBeatTime = currentTime;
+                            total += currentTime;
+                        }
                     }
+
                 }
+                Debug.Log(total);
                 //Increment the processed sample number by the amount of processed numbers
                 processedNum += fftLength;
 
@@ -116,6 +129,7 @@ public class BeatDetection : EditorWindow
                     energyHistory.RemoveAt(0); 
                 }
             }
+            Debug.Log("");
         }
         File.WriteAllText(Application.streamingAssetsPath + "/" + Path.GetFileNameWithoutExtension(audioFilePath) + ".json", JsonUtility.ToJson(data));
     }
@@ -168,6 +182,7 @@ public class BeatDetection : EditorWindow
     int numBands = 16;
     int fftLength = 8192;
     double thresholdAdjustmentFactor = 1.5;
+    double minInterval = 0.25;
     public void OnGUI()
     {
         audioFilePath = EditorGUILayout.TextField("File Name", audioFilePath);
@@ -178,9 +193,11 @@ public class BeatDetection : EditorWindow
 
         thresholdAdjustmentFactor = EditorGUILayout.DoubleField("Threshold Adjustment Factor", thresholdAdjustmentFactor);
 
+        minInterval = EditorGUILayout.DoubleField("Minimum Interval Between Beats", minInterval);
+
         if (GUILayout.Button("Detect Beats"))
         {
-            DetectBeats(audioFilePath, numBands, fftLength, thresholdAdjustmentFactor);
+            DetectBeats(audioFilePath, numBands, fftLength, thresholdAdjustmentFactor, minInterval);
         }
     }
 }
