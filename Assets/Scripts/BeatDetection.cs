@@ -97,12 +97,9 @@ public class BeatDetection : EditorWindow
                 // Calculate dynamic threshold
                 double dynamicThreshold = CalculateDynamicThreshold(bandEnergy);
 
-                //Alright, I'm doing this to prevent the compiler from saying that this loop is useless and optimizing it away, because that's a problem apparently
-                double total = 0f;
                 // Detect beats based on energy and threshold
                 for (int j = 0; j < numBands; j++)
                 {
-                    total += bandEnergy[j];
                     if (bandEnergy[j] > dynamicThreshold * thresholdAdjustmentFactor)
                     {
                         //Find the time from the sampleRate and the amount of samples taken

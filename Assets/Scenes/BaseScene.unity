@@ -1175,8 +1175,7 @@ MonoBehaviour:
   WIDTH: 40
   HEIGHT: 23
   tileSprite: {fileID: 21300000, guid: c27f77567f47f1648bf6c53f722534c3, type: 3}
-  musicPath: Assets/StreamingAssets/Mark Ronson - Uptown Funk (Official Video) ft.
-    Bruno Mars.mp3
+  musicPath: Assets/StreamingAssets/60 BPM Metronome.mp3
   audioSource: {fileID: 2002350984}
 --- !u!4 &892128678
 Transform:
