@@ -88,9 +88,9 @@ public class GameController : MonoBehaviour
     public void PlayAudio(AudioClip mp3Clip, string fileName)
     {
         audioSource.clip = mp3Clip;
-        audioSource.Play();
         BeatData data = JsonUtility.FromJson<BeatData>(File.ReadAllText(Application.streamingAssetsPath + "/" + Path.GetFileNameWithoutExtension(fileName) + ".json"));
         StartCoroutine(BeatCoroutine(data));
+        audioSource.Play();
     }
 
     public IEnumerator BeatCoroutine(BeatData data)

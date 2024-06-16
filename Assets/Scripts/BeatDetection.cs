@@ -40,14 +40,12 @@ public class BeatDetection : EditorWindow
         window.Show();
     }
 
-    private static int ThresholdWindowSize = 100; // Adjust window size as needed
-    private static double SmoothingFactor = 0.1; // Adjust smoothing factor as needed
 
     // Define variables to track threshold and energy history
     private static double[] thresholds;
     private static List<double> energyHistory = new List<double>();
 
-    public static void DetectBeats(string audioFilePath, int numBands, int fftLength, double thresholdAdjustmentFactor, double minInterval)
+    public static void DetectBeats(string audioFilePath, int numBands, int fftLength, double thresholdAdjustmentFactor, double minInterval, int ThresholdWindowSize, double SmoothingFactor)
     {
         Debug.Log(Path.GetFileName(audioFilePath));
         double lastBeatTime = -1;
@@ -70,7 +68,7 @@ public class BeatDetection : EditorWindow
             Complex[] fftBuffer = new Complex[fftLength];
             for (int i = 0; i < samplesRead / fftLength; i++)
             {
-                // Fill FFT buffer with samples
+                // Fill our FFT buffer with samples. For simplicity, we only have 1 real component, but FFT requires it to be complex
                 for (int j = 0; j < fftLength; j++)
                 {
                     // Yay, complex numbers
@@ -95,7 +93,7 @@ public class BeatDetection : EditorWindow
                 energyHistory.Add(sum /= bandEnergy.Length);
 
                 // Calculate dynamic threshold
-                double dynamicThreshold = CalculateDynamicThreshold(bandEnergy);
+                double dynamicThreshold = CalculateDynamicThreshold(bandEnergy, SmoothingFactor);
 
                 // Detect beats based on energy and threshold
                 for (int j = 0; j < numBands; j++)
@@ -115,10 +113,10 @@ public class BeatDetection : EditorWindow
                     }
 
                 }
-                //Increment the processed sample number by the amount of processed numbers
+                //Increment the amount of samples we have processed
                 processedNum += fftLength;
 
-                // Update energy history
+                // Update energy history. This assumes that the adjustment is done in the if, otherwise we end up with everything exponentially increasing
                 energyHistory.Add(dynamicThreshold);
                 if (energyHistory.Count > ThresholdWindowSize)
                 {
@@ -136,18 +134,18 @@ public class BeatDetection : EditorWindow
         int samplesPerBand = fftLength / numBands;
         for (int j = 0; j < numBands; j++)
         {
-            // Calculate energy in the band
+            // Add all of the magnitudes together
             for (int k = 0; k < samplesPerBand; k++)
             {
                 bandEnergy[j] += Math.Sqrt(Math.Pow(fftBuffer[j * samplesPerBand + k].X, 2) + Math.Pow(fftBuffer[j * samplesPerBand + k].Y, 2));
             }
-            // Normalize energy (optional)
+            // Average it baby
             bandEnergy[j] /= samplesPerBand;
         }
         return bandEnergy;
     }
 
-    private static double CalculateDynamicThreshold(double[] bandEnergy)
+    private static double CalculateDynamicThreshold(double[] bandEnergy, double SmoothingFactor)
     {
         // Calculate average energy over the recent history
         double sum = 0;
@@ -157,7 +155,7 @@ public class BeatDetection : EditorWindow
         }
         double averageEnergy = energyHistory.Count > 0 ? sum / energyHistory.Count : 0;
 
-        // Calculate dynamic threshold (e.g., as a percentage of average energy)
+        // dynamic threshold is just the average energy
         double dynamicThreshold = averageEnergy;
 
         // Smooth the threshold using exponential smoothing
@@ -175,10 +173,13 @@ public class BeatDetection : EditorWindow
     }
 
     string audioFilePath = "Put Your Audio File Path Here";
-    int numBands = 16;
-    int fftLength = 8192;
-    double thresholdAdjustmentFactor = 1.5;
-    double minInterval = 0.25;
+    int numBands = 64;
+    int fftLength = 1024;
+    double thresholdAdjustmentFactor = 10;
+    double minInterval = 0.1;
+
+    int thresholdWindow = 100;
+    double smoothing = 0.1;
     public void OnGUI()
     {
         audioFilePath = EditorGUILayout.TextField("File Name", audioFilePath);
@@ -191,9 +192,13 @@ public class BeatDetection : EditorWindow
 
         minInterval = EditorGUILayout.DoubleField("Minimum Interval Between Beats", minInterval);
 
+        thresholdWindow = EditorGUILayout.IntField("Smoothing Window", thresholdWindow);
+
+        smoothing = EditorGUILayout.DoubleField("Smoothing Factor", smoothing);
+
         if (GUILayout.Button("Detect Beats"))
         {
-            DetectBeats(audioFilePath, numBands, fftLength, thresholdAdjustmentFactor, minInterval);
+            DetectBeats(audioFilePath, numBands, fftLength, thresholdAdjustmentFactor, minInterval, thresholdWindow, smoothing);
         }
     }
 }
